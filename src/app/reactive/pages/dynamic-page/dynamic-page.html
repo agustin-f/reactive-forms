@@ -1,26 +1,31 @@
 <h2>Reactivos: <small> Dinámicos </small></h2>
 <hr>
 
-<form autocomplete="off">
+<form autocomplete="off" [formGroup]="myForm">
 
   <!-- Nombre -->
   <div class="mb-3 row">
     <label class="col-sm-3 col-form-label">Nombre</label>
     <div class="col-sm-9">
-      <input class="form-control" placeholder="Nombre de la persona">
+      <input class="form-control" placeholder="Nombre de la persona" formControlName="name">
+      @if (formUtils.isValidField(myForm,'name')) {
       <span class="form-text text-danger">
-        error message
+        {{formUtils.getFieldError(myForm,'name')}}
       </span>
+      }
+
     </div>
   </div>
 
   <!-- Agregar Favorito -->
-  <div class="mb-3 row">
+  <div class="mb-3 row" formArrayName='favoriteGames'>
     <label class="col-sm-3 col-form-label">Agregar</label>
-    <div class="col-sm-9">
 
+    @for (favoriteGame of favoriteGames.controls; track $index; let i = $index) {
+    <div class="col-sm-9">
       <div class="input-group">
-        <input class="form-control" placeholder="Agregar favorito">
+        <input class="form-control" placeholder="Agregar favorito" [formControlName]="i" [formControl]="newFavorite"
+          (keydown.enter)="onAddToFavorites()">
 
 
         <button class="btn btn-outline-primary" type="button">
@@ -28,6 +33,10 @@
         </button>
       </div>
     </div>
+    }
+
+
+
   </div>
 
 
@@ -36,6 +45,7 @@
     <label class="col-sm-3 col-form-label">Favoritos</label>
     <div class="col-sm-9">
 
+      @for (favoriteGame of favoriteGames.controls; track $index; let i = $index) {
       <div class="mb-1">
 
         <div class="input-group">
@@ -45,11 +55,14 @@
             Eliminar
           </button>
         </div>
+        @if (formUtils.isValidFieldInArray(favoriteGames,i)) {
         <span class="form-text text-danger">
-          Este campo es requerido
+          {{formUtils.getFieldError(myForm,'name')}}
         </span>
+        }
 
       </div>
+      }
 
     </div>
   </div>

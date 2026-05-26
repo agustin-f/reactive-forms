@@ -1,5 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { formUtils } from '../../../utils/form-utils';
 import {
   FormBuilder,
   FormControl,
@@ -16,6 +17,7 @@ import {
 })
 export class BasicPage {
   private fb = inject(FormBuilder);
+  formUtils = formUtils;
 
   myForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -24,10 +26,10 @@ export class BasicPage {
   });
 
   isValidField(fieldName: string): boolean | null {
-    return !!this.myForm.controls[fieldName].errors;
+    return this.myForm.controls[fieldName].errors && this.myForm.controls[fieldName].touched;
   }
 
-  getFieldError(fieldName: string): string | null {
+  /* getFieldError(fieldName: string): string | null {
     if (!this.myForm.controls[fieldName]) return null;
 
     const errors = this.myForm.controls[fieldName].errors ?? {};
@@ -47,5 +49,11 @@ export class BasicPage {
       return null;
     }
     return null;
+  } */
+
+  onSave() {
+    this.myForm.markAllAsTouched();
+
+    this.myForm.reset();
   }
 }
