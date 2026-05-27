@@ -1,6 +1,10 @@
 import { FormArray, FormGroup } from '@angular/forms';
 
 export class formUtils {
+  static namePattern = '([a-zA-Z]+) ([a-zA-Z]+)';
+  static emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+  static notOnlySpacesPattern = '^[a-zA-Z0-9]+$';
+
   static isValidField(form: FormGroup, fieldName: string): boolean | null {
     return form.controls[fieldName].errors && form.controls[fieldName].touched;
   }
@@ -23,6 +27,16 @@ export class formUtils {
 
         case 'email':
           return 'El valor ingresado no es un correo electronico';
+
+        case 'pattern':
+          if (errors['pattern'].requiredPattern === formUtils.emailPattern) {
+            return 'El valor ingresado no luce como un correo electrónico';
+          }
+
+          return 'Error de patrón contra expresión regular';
+
+        default:
+          return `Error de validación no controlado ${key}`;
       }
 
       return null;

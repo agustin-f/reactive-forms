@@ -10,17 +10,16 @@
       <div class="row mb-3">
         <label class="col-sm-3 col-form-label">Nombre y apellido</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="Nombre del usuario" formControlName="name">
+          <input type="text" class="form-control" placeholder="Nombre y apellido" formControlName="name">
 
           @if (formUtils.isValidField(myForm,'name')) {
           <span class="form-text text-danger">
-            {{formUtils.getFieldError(myForm,'name')}}
+            El campo debe tener nombre y apellido
+
           </span>
           }
 
-          <!--        <span class="form-text text-danger">
-            Debe de ser en formato de nombre y apellido
-          </span> -->
+
         </div>
       </div>
 
@@ -81,6 +80,10 @@
 
       <div class="row">
         <div class="col">
+          @if(myForm.errors && myForm.touched){
+          <span class="text-danger">Las contraseñas no son iguales</span>
+          }
+
           <button class="btn btn-primary float-end" type="submit">
             Crear
           </button>

@@ -1,6 +1,12 @@
 import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormGroup,
+  AbstractControl,
+} from '@angular/forms';
 import { formUtils } from '../../../utils/form-utils';
 
 @Component({
@@ -14,13 +20,34 @@ export class RegisterPage {
 
   formUtils = formUtils;
 
-  myForm = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    username: ['', [Validators.required, Validators.minLength(6)]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    password2: ['', Validators.required],
-  });
+  myForm = this.fb.group(
+    {
+      name: ['', [Validators.required, Validators.pattern(formUtils.namePattern)]],
+      email: ['', [Validators.required, Validators.pattern(formUtils.emailPattern)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.pattern(formUtils.notOnlySpacesPattern),
+        ],
+      ],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      password2: ['', Validators.required],
+    },
+    {
+      validators: [this.isFieldOneEqualFieldTwo('password', 'password2')],
+    },
+  );
+
+  isFieldOneEqualFieldTwo(field1: string, field2: string) {
+    return (FormGroup: AbstractControl) => {
+      const field1Value = FormGroup.get(field1)?.value;
+      const field2Value = FormGroup.get(field2)?.value;
+
+      return field1Value === field2Value ? null : { passwordNotEqual: true };
+    };
+  }
 
   onSubmit() {
     this.myForm.markAllAsTouched();
