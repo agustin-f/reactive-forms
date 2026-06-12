@@ -6,6 +6,7 @@ import {
   Validators,
   FormGroup,
   AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import { formUtils } from '../../../utils/form-utils';
 
@@ -47,6 +48,10 @@ export class RegisterPage {
 
       return field1Value === field2Value ? null : { passwordNotEqual: true };
     };
+  }
+
+  static async checkingServerResponse(control: AbstractControl): Promise<ValidationErrors | null> {
+    return null;
   }
 
   onSubmit() {
